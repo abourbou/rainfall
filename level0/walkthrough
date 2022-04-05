@@ -1,0 +1,7 @@
+#we see an atoi
+#then it compares it to 0x1a7 who is 423 in decimal
+
+./level0 423
+=> connected to level1
+cat /home/user/level1/.pass
+=> password

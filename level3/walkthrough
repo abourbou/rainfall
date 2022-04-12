@@ -1,0 +1,12 @@
+#so we see a binary who execute a shell conditionnaly of the value of a m variable
+#the m variable is not defined in the v function, so it must be a global variable
+=> we must find and replace this var with the value 0x40
+
+#with gdb we see that the address of m is 0x804988c
+x 0x804988c => m is equal to 0, we must change it
+
+#the problem is the program use fgets and not gets anymore
+the address of char *format, the string where is stocked the imput is 0xbffff520
+
+#nevermind, we can open the shell directly with gdb by changing the value of eax to 0x40
+=>but we are still the user level3, we are not level4! (why?)

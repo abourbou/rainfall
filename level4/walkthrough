@@ -1,0 +1,29 @@
+The goal here is to exploit the printf fonction and more specificly the flag %n and %hn (wich allows us to manipulate 2 bytes at a time)
+
+As we did in the last one whe had to find the offset of our buff thanks to adrPrinter
+We've found 12.
+
+Then we had to write 0x01025544 in m since it's what the if statement is testing.
+
+We tried to write it like in last ex but the fgets reads only 200 characters wich is too low to input 0x01025544
+
+We had to find a way to write more character without the need to input them in the fgets.
+
+We tried to use the %c with a number onto it (wich is red by printf as follows -> %3c -> ccc)
+
+Without any sucess, m became empty.
+We then looked into the %hhn and %hn (instead of the %n wich only reads how many ch where printed)
+
+After many tests and fails (detailed in parts in the print.c file), we've found that we could use the %x (with a number in between) to input many hexadecimal characters
+and then the %hn (offseted by 12, remeber ?).
+So we could now edit the first two bytes of our address (aka m).
+
+We had to find how to edit the two next bytes and we figured out that we could use another %x. So after many tries we offseted our %hn by one and our adress by two
+
+We could then edit the whole value stored at m address.
+
+We then had to find how to fill 0x01025544 in it.
+
+We tried and found that 250 and 21570 (we tried multiples values, no magic trick unfortunatly).
+
+./print | ~/level4 -> password.

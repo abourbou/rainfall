@@ -1,0 +1,14 @@
+The goal here was to replace the call of exit in the n fonction by a call to the o function.
+
+As we learned how to use the printf function to write into specific memory address, we just had to find in wich we had to write.
+We firstly found that our buffer offset was 4
+
+Then we used Cutter to find the adress of exit wich is 0x08049838
+We replaced it''s value by o function''s address wich is 0x080484a4
+
+And then  just had to keep the pipe open and Voilà !
+
+(./print; cat) | ~/level5
+
+cd /home/user/level6
+cat .pass

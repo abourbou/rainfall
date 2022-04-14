@@ -1,0 +1,6 @@
+The first arg looks to be overflow sensitive, not the second
+
+first arg segfault -> AAAAAAAAAAAAAAAAAAAAA (21 ch)
+
+the second buffer look to be influenting eip
+

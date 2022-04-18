@@ -38,27 +38,27 @@ label_0:
         eax = (int32_t) al;										//if (src[i] < str[i])
         if (eax == 0) {											//{
             eax = malloc (4);									//	auth = malloc(4)
-            *(auth) = eax;										//	auth = 0 //?????
-            eax = auth;											//	eax = src + 5
-            *(eax) = 0;											//
+            *(auth) = eax;
+            eax = auth;
+            *(eax) = 0;											//	auth = 0 //?????
             eax = &src;											//
-            eax += 5;
-            var_1ch = 0xffffffff;
+            eax += 5;											//	eax = src + 5
+            var_1ch = ;
             edx = eax;
             eax = 0;
-            ecx = var_1ch;
-            edi = edx;
-            __asm ("repne scasb al, byte es:[edi]");
+            ecx = var_1ch;										//do i--
+            edi = edx;											//while (src[5 + i] != 0)
+            __asm ("repne scasb al, byte es:[edi]");			//repeat until null char find in src
             eax = ecx;
             eax = ~eax;
-            eax--;
-            if (eax > 0x1e) {
+            eax--;												//eax = nbr char before null char
+            if (eax > 0x1e) {									//if (eax > 30)
                 goto label_2;
             }
-            eax = &src;
-            edx = eax + 5;
+            eax = &src;											//else
+            edx = eax + 5;										//strcpy(auth, src + 5)
             eax = auth;
-            strcpy (eax, edx);
+            strcpy (eax, edx);									
         }
 label_2:
         eax = &src;
@@ -67,7 +67,7 @@ label_2:
         ecx = 5;
         esi = edx;
         edi = eax;
-        __asm ("repe cmpsb byte [esi], byte ptr es:[edi]");
+        __asm ("repe cmpsb byte [esi], byte ptr es:[edi]");		//do the same thing that with "auth "
         dl = (eax > 0x1e) ? 1 : 0;
         al = (eax < 0x1e) ? 1 : 0;
         ecx = edx;
@@ -84,7 +84,7 @@ label_2:
         ecx = 6;
         esi = edx;
         edi = eax;
-        __asm ("repe cmpsb byte [esi], byte ptr es:[edi]");
+        __asm ("repe cmpsb byte [esi], byte ptr es:[edi]");		//do the same thing that with "auth "
         dl = (eax > 0) ? 1 : 0;
         al = (eax < 0) ? 1 : 0;
         ecx = edx;

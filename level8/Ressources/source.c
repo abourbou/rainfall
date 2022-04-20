@@ -58,7 +58,7 @@ label_0:
             eax = &src;											//else
             edx = eax + 5;										//strcpy(auth, src + 5)
             eax = auth;
-            strcpy (eax, edx);									
+            strcpy (eax, edx);
         }
 label_2:
         eax = &src;

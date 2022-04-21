@@ -1,0 +1,9 @@
+#we have few impact on the program
+#we cannot segfault, we can only put one argument who is used for atoi
+
+the program use our atoi to put a \0 at the position you want after auStack152
+
+we want to pass the test :         strcmp(auStack152, envp[1]) == 0
+so we change auStack152 to '\0' with an argument of '\0'
+=> indeed the atoi will be null and so auStack152[0] = 0
+=> strcmp('\0', '\0') will be true!

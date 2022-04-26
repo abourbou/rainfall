@@ -82,4 +82,4 @@ le malloc d'après est l'addresse du notre structure, soit notre vtable
 donc vtable = buffer
 ensuite on veux acceder à notre premiere fonction de la vtable, soit la cmd : "**vtable;"
 donc le début de notre buffer va être l'addresse vers la suite de notre buffer car on a un déreferencement en plus
-puis on met notre shell code en le remplissant pour faire exactement 108 caractères 
+puis on met notre shell code en le remplissant pour faire exactement 108 caractères
